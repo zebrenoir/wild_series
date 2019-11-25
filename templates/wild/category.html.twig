@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1>Série {{ category.name }}</h1>
+    {% for program in programs %}
+    <li>
+        <p></p>
+        <h2>#{{ program.id ~ ' ' ~ program.title }}</h2>
+        <img src="{{ program.poster }}" alt="{{ program.title }} poster">
+        <p>{{ program.summary }}</p>
+    </li>
+    {% endfor %}
+{% endblock %}
