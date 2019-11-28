@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Program;
+use App\Entity\Season;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -91,5 +92,50 @@ class WildController extends AbstractController
 
     }
 
+    /**
+     * Getting a program with a formatted slug for title
+     *
+     * @param string $slug The slugger
+     * @Route("/program/{slug<^[a-z0-9-]+$>}", defaults={"slug" = null}, name="program")
+     * @return Response
+     */
+    public function showByProgram(?string $slug):Response
+    {
+        $slug = preg_replace(
+            '/-/',
+            ' ', ucwords(trim(strip_tags($slug)), "-")
+        );
 
+        $program = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findOneBy(['title' => mb_strtolower($slug)]);
+
+        return $this->render('wild/program.html.twig', [
+            'program' => $program,
+            'slug'  => $slug,
+        ]);
+    }
+
+    /**
+     * Getting a program with a formatted slug for title
+     *
+     *
+     * @Route("/season/{id}", name="season")
+     * @return Response
+     */
+    public function showBySeason(int $id):Response
+    {
+        $season = $this->getDoctrine()
+            ->getRepository(Season::class)
+            ->find($id);
+
+        $program = $season->getProgram();
+        $episodes = $season->getEpisodes();
+
+        return $this->render('wild/season.html.twig', [
+            'season' => $season,
+            'program' => $program,
+            'episodes' => $episodes
+        ]);
+    }
 }
