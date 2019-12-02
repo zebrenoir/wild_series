@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <h1>Série {{ category.name }}</h1>
+    <h1>Séries de la catégorie <b>{{ category.name }}</b></h1>
+    {% if programs is empty %}
+        <p>Aucune série n'a encore été ajoutée à cette catégorie</p>
+    {% endif %}
     {% for program in programs %}
     <li>
         <p></p>

@@ -27,12 +27,18 @@ class CategoryController extends AbstractController
             $em->persist($category);
             $em->flush();
 
-            return $this->redirectToRoute('wild_index');
+            $data = $form->getData();
+//            var_dump($data);
+
+
+            return $this->redirectToRoute('wild_show_category', [
+                'categoryName' => $data->getName()
+            ]);
         }
 
 
         return $this->render('category/index.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 }
