@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 
 use App\Entity\Program;
+use App\Service\Slugify;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -65,11 +66,13 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $step = 0;
+        $slugify = new Slugify();
         foreach (self::PROGRAMS as $title => $values) {
             $program = new Program();
             $program->setSummary($values['summary']);
             $program->setCategory($this->getReference('categorie_4'));
             $program->setTitle($title);
+            $program->setSlug($slugify->generate($title));
 
             $manager->persist($program);
             $this->addReference('program_' . $step, $program);
