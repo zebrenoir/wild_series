@@ -57,6 +57,13 @@ class Slugify
         }
         $input = str_replace('--', '-', $input);
 
+        if ($input[0] === '-') {
+            $input[0] = '';
+        }
+/*        if ($input[strlen($input) - 1] === '-') {
+            $input[strlen($input) - 1] = '';
+        }*/
+
         return $input;
     }
 }
