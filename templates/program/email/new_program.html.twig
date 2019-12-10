@@ -1,0 +1,15 @@
+{% apply inline_css %}
+    <style>
+        body {
+            background-color: #999999;
+        }
+        h1 {
+            color: #586994;
+        }
+    </style>
+<h1>Une nouvelle série vient d'être ajoutée !</h1>
+
+<h2>Bonne nouvelle, nous venons d'ajouter la série "<em>{{ program.title }}</em>" à notre catalogue !</h2>
+
+<p>Suivez <a href="http://localhost:8000/program/{{ program.slug }}">ce lien</a> pour en savoir plus !</p>
+{% endapply %}
