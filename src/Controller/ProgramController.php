@@ -54,7 +54,6 @@ class ProgramController extends AbstractController
                     'program' => $program
                 ]);
 
-
             $mailer->send($email);
 
             return $this->redirectToRoute('program_index');
