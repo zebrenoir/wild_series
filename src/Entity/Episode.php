@@ -40,14 +40,14 @@ class Episode
     private $season;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="episode")
-     */
-    private $comments;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="episode", orphanRemoval=true)
+     */
+    private $comments;
 
     public function __construct()
     {
@@ -107,6 +107,18 @@ class Episode
         return $this;
     }
 
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Comment[]
      */
@@ -134,18 +146,6 @@ class Episode
                 $comment->setEpisode(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
 
         return $this;
     }

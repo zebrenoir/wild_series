@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\Episode;
 use App\Entity\Program;
 use App\Entity\Season;
+use App\Form\CommentType;
 use App\Form\ProgramSearchType;
+use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -151,15 +154,36 @@ class WildController extends AbstractController
     /**
      * @Route("/episode/{id}", name="episode")
      */
-    public function showEpisode(Episode $episode)
+    public function showEpisode(Episode $episode, Request $request, CommentRepository $commentRepository, $id)
     {
         $season = $episode->getSeason();
         $program = $season->getProgram();
 
+//        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $comment = new Comment();
+        $comments = $commentRepository->findAll();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            $user = $this->getUser();
+            $entityManager = $this->getDoctrine()->getManager();
+            $comment->setAuthor($this->getUser());
+            $comment->setEpisode($episode);
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('wild_episode', ['id' => $id]);
+        }
+
         return $this->render('wild/episode.html.twig', [
             'episode' => $episode,
             'season' => $season,
-            'program' => $program
+            'form' => $form->createView(),
+            'program' => $program,
+            'user' => 'user',
+            'comments' => $comments,
         ]);
     }
 }
