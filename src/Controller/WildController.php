@@ -161,7 +161,7 @@ class WildController extends AbstractController
 
 //        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $comment = new Comment();
-        $comments = $commentRepository->findAll();
+        $comments = $commentRepository->findByEpisode($id);
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
