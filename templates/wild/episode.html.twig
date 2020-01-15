@@ -24,8 +24,17 @@
                 <li class="card-body">
                     <p>{{ comment.comment }}</p>
                     <p>Note : {{ comment.rate }} / 10</p>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    {% if comment.author.email == app.user.email %}
+                        <form action="{{ path('wild_comment_delete', { id: comment.id }) }}" method="post">
+                            <input type="hidden" name="token" value="{{ csrf_token('delete-comment') }}"/>
+                            <button type="submit">Supprimer le commentaire</button>
+                        </form>
+                    {% endif %}
+                    {% endif %}
                 </li>
             </div>
+
         {% endfor %}
     </ul>
     <a href="{{ path('wild_index') }}">

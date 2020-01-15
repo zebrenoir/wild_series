@@ -186,4 +186,22 @@ class WildController extends AbstractController
             'comments' => $comments,
         ]);
     }
+
+    /**
+     * @Route("/comment/{id}/delete", name="comment_delete", methods={"post"})
+     */
+    public function deleteComment(Request $request, Comment $comment)
+    {
+        $episode = $comment->getEpisode();
+
+
+        if ($this->isCsrfTokenValid('delete-comment', $request->request->get('token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($comment);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre commentaire a bien été supprimé');
+        }
+
+        return $this->redirectToRoute('wild_episode', ['id' => $episode->getId()]);
+    }
 }
